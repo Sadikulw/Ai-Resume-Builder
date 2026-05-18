@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="60" y1="40" x2="460" y2="470" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+
+    <linearGradient id="glass" x1="140" y1="120" x2="350" y2="360" gradientUnits="userSpaceOnUse">
+      <stop stop-color="white" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="white" stop-opacity="0.65"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="120" fill="url(#bg)"/>
+
+  <!-- Main Shape -->
+  <rect x="130" y="110" width="210" height="280" rx="42" fill="url(#glass)"/>
+
+  <!-- Fold Corner -->
+  <path d="M285 110H340V165L285 110Z" fill="#C4B5FD" fill-opacity="0.8"/>
+
+  <!-- Minimal Resume Lines -->
+  <rect x="170" y="190" width="130" height="14" rx="7" fill="#7C3AED"/>
+  <rect x="170" y="228" width="105" height="10" rx="5" fill="#A78BFA"/>
+  <rect x="170" y="258" width="120" height="10" rx="5" fill="#A78BFA"/>
+  <rect x="170" y="288" width="90" height="10" rx="5" fill="#A78BFA"/>
+
+  <!-- AI Orb -->
+  <circle cx="345" cy="355" r="48" fill="#0F172A"/>
+  <path d="M345 325L353 344L373 352L353 360L345 379L337 360L317 352L337 344L345 325Z" fill="#22D3EE"/>
+</svg>
