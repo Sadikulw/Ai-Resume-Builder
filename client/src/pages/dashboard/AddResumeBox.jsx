@@ -9,23 +9,47 @@ import {
 } from "@/components/ui/dialog";
 
 import { useNavigate } from "react-router-dom";
-
+import api from "@/api/axios";
+import { useUser } from "@clerk/clerk-react";
 const AddResumeBox = ({ setTitle }) => {
+  const { user } = useUser();
   const [openDialog, setOpenDialog] = useState(false);
   const [enterTitle, setEnterTitle] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
-  const handleCreate = () => {
-    setTitle(enterTitle);
+  const handleCreate = async () => {
+    if (!enterTitle.trim()) {
+      alert("Please enter resume title");
+      return;
+    }
 
-    navigate("/app/resume-builder");
+    try {
+      setLoading(true);
+      setTitle(enterTitle);
 
-    setOpenDialog(false);
+     
+      const response = await api.post("/resume/create", {
+        title: enterTitle,
+        userId: user.id,
+      });
+    
+     
+      console.log("Resume created:", response.data);
+
+     
+      setOpenDialog(false);
+
+     
+      navigate(`resume-builder/${response.data._id}`);
+    } catch (error) {
+      console.log("API Error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
-const handleShare=()=>{
-  const frontendUrl= window.location.href.split
-}
+
   return (
     <div>
       <div
@@ -54,10 +78,12 @@ const handleShare=()=>{
           />
 
           <button
-            className="w-full mt-4 bg-[#3793C4] text-white py-2 rounded-md"
+            type="button"
+            disabled={loading}
+            className="w-full mt-4 bg-[#3793C4] text-white py-2 rounded-md disabled:opacity-50"
             onClick={handleCreate}
           >
-            Create
+            {loading ? "Creating..." : "Create"}
           </button>
         </DialogContent>
       </Dialog>

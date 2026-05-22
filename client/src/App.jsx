@@ -6,20 +6,31 @@ import Layout from "./pages/app/Layout.jsx";
 import SigninPage from "./pages/auth/SigninPage.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import ResumeBuilder from "./pages/app/ResumeBuilder.jsx";
+import PreviewResume from "./components/ResumeBuilder/PreviewResume.jsx";
+
 
 const App = () => {
   const [title, setTitle] = useState("");
+  
+
   return (
     <>
       <Routes>
+
         <Route path="/" element={<LandingPage />} />
         <Route path="/sign-in" element={<SigninPage />} />
         <Route path="/*" element={<PageNotFound />} />
+
+
         <Route path="app" element={<Layout />}>
           <Route index element={<DashboardPage setTitle={setTitle} />} />
           <Route
-            path="resume-builder"
+            path="resume-builder/:id"
             element={<ResumeBuilder title={title} />}
+          />
+          <Route
+            path="resume/:id/perview"
+            element={<PreviewResume  />}
           />
         </Route>
       </Routes>

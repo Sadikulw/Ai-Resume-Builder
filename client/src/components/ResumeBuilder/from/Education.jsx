@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Plus, Sparkles, Trash2 } from "lucide-react";
 import SaveAndContinue from "../SaveAndContinue";
+import api from "@/api/axios";
 const formField = {
   degree: "",
   institution: "",
@@ -31,6 +32,25 @@ const Education = ({ data, setData,nextTab }) => {
     });
   };
 
+  const saveEducation = async () => {
+  try {
+
+    const response = await api.put(
+      `/resume/${data._id}/section`,
+      {
+        education: data.education,
+      }
+    );
+
+   
+
+    nextTab();
+
+  } catch (error) {
+    console.log(error);
+  }
+
+};
   const removeeducation = (index) => {
     const newEntries = data.education.filter((_, i) => i !== index);
 
@@ -125,7 +145,7 @@ const Education = ({ data, setData,nextTab }) => {
           </div>
         </div>
       </div>
-       <SaveAndContinue nextTab={nextTab}/>
+       <SaveAndContinue onSave={saveEducation}/>
     </div>
   );
 };

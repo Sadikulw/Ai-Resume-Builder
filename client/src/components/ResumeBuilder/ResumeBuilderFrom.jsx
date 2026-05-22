@@ -9,7 +9,6 @@ import Project from "./from/Project";
 import Skills from "./from/Skills";
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useReactToPrint } from "react-to-print";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,12 +72,9 @@ const templates = [
     name: "MinimalImage",
     value: "minimal-image",
   },
-  
 ];
 
 const ResumeBuilderFrom = ({ data, setData, setTemplates, setAccentColor }) => {
-
-
   const [selectedTheme, setSelectedTheme] = useState(themes[0]);
   const [selectedTemplate, setSelectedTemplate] = useState(templates[0].value);
   const totalTabs = 6;
@@ -183,38 +179,41 @@ const ResumeBuilderFrom = ({ data, setData, setTemplates, setAccentColor }) => {
           </DropdownMenu>
         </div>
         <div>
-         <DropdownMenu>
-  <DropdownMenuTrigger asChild>
-    <Button
-      variant="outline"
-      className="flex items-center gap-2 rounded-xl"
-    >
-      {selectedTemplate.name} Template
-    </Button>
-  </DropdownMenuTrigger>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="flex items-center gap-2 rounded-xl"
+              >
+                {selectedTemplate.name} Template
+              </Button>
+            </DropdownMenuTrigger>
 
-  <DropdownMenuContent className="w-52 rounded-2xl p-2">
-    <DropdownMenuLabel className="text-base">
-      Choose Template
-    </DropdownMenuLabel>
+            <DropdownMenuContent className="w-52 rounded-2xl p-2">
+              <DropdownMenuLabel className="text-base">
+                Choose Template
+              </DropdownMenuLabel>
 
-    <div className="space-y-1 mt-2">
-      {templates.map((template, index) => (
-        <DropdownMenuItem
-          key={index}
-          onClick={() => {setSelectedTemplate(template); setTemplates(template.value)}}
-          className="flex justify-between items-center rounded-xl p-3 cursor-pointer"
-        >
-          <span>{template.name}</span>
+              <div className="space-y-1 mt-2">
+                {templates.map((template, index) => (
+                  <DropdownMenuItem
+                    key={index}
+                    onClick={() => {
+                      setSelectedTemplate(template);
+                      setTemplates(template.value);
+                    }}
+                    className="flex justify-between items-center rounded-xl p-3 cursor-pointer"
+                  >
+                    <span>{template.name}</span>
 
-          {selectedTemplate.value === template.value && (
-            <Check size={16} />
-          )}
-        </DropdownMenuItem>
-      ))}
-    </div>
-  </DropdownMenuContent>
-</DropdownMenu>
+                    {selectedTemplate.value === template.value && (
+                      <Check size={16} />
+                    )}
+                  </DropdownMenuItem>
+                ))}
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
 

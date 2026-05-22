@@ -1,50 +1,68 @@
-import { dummyResumeData } from "@/components/dummyResumeData/dummyData";
 import ResumeBuilderFrom from "@/components/ResumeBuilder/ResumeBuilderFrom";
 import ResumeBuilderPreview from "@/components/ResumeBuilder/ResumeBuilderPreview";
-import React, { useEffect, useState, useRef } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import React, { useEffect, useState } from "react";
+
 
 import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
-import { Download, FileText, Image, Share2 } from "lucide-react";
-import { useReactToPrint } from "react-to-print";
+import { Link, useParams } from "react-router-dom";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-
+import api from "@/api/axios";
+import { useNavigate } from "react-router-dom";
 const ResumeBuilder = ({ title = "Resume Builder" }) => {
-  const resumeRef = useRef();
-  const handlePrint = useReactToPrint({
-    contentRef: resumeRef,
-    documentTitle: "Resume",
+  
+  const [accentColor, setAccentColor] = useState("");
+  const [templates, setTemplates] = useState("");
+  const [dowloadeOpen, setDowloadeOpen] = useState(false);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const [data, setData] = useState({
+    title: "",
+    personal_info: {},
+    professional_summary: "",
+    experience: [],
+    education: [],
+    projects: [],
+    skills: [],
+    templates:"",
+    accentColor:"",
   });
-
   const handleSheare = () => {
     navigator.share({ url: window.location.href, text: "Resume" });
   };
 
-  const [data, setData] = useState(dummyResumeData);
-  const [accentColor, setAccentColor] = useState("#2563eb");
-  const [templates, setTemplates] = useState("classic");
-  const [dowloadeOpen, setDowloadeOpen] = useState(false);
   useEffect(() => {
-    document.title = title;
-  }, [title]);
-  const PrintData = () => {
-    console.log(templates);
-  };
+    const fetchResume = async () => {
+      try {
+        const response = await api.get(`/resume/${id}`);
+
+        setData(response.data);
+         setTemplates(response.data.templates)
+      setAccentColor(response.data.accentColor)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchResume();
+  }, [id]);
+
+  useEffect(() => {
+    document.title = data.title || title;
+  }, []);
+  const saveResume=async()=>{
+    
+    try {
+     const  response=await api.put(`/resume/${id}/section`,{
+        accentColor:accentColor,
+        templates:templates,
+      })
+     
+      navigate(`/app/resume/${id}/perview`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-100 via-white to-cyan-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -62,7 +80,7 @@ const ResumeBuilder = ({ title = "Resume Builder" }) => {
 
           <button
             className="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-xl shadow-sm transition-all duration-200 font-medium w-fit"
-            onClick={PrintData}
+            onClick={saveResume}
           >
             Save Resume
           </button>
@@ -126,69 +144,12 @@ const ResumeBuilder = ({ title = "Resume Builder" }) => {
                   </div>
 
                   <div className="bg-cyan-100 text-cyan-700 text-sm font-medium px-3 py-1 rounded-full">
-                    {templates.toUpperCase()} Template
+                    {templates} Template
                   </div>
-                  <div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button className="rounded-xl flex items-center gap-2">
-                          <Download size={18} />
-                          Download
-                        </Button>
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent className="w-52 rounded-2xl p-2">
-                        <DropdownMenuItem
-                          // onClick={handlePrint}
-                          onClick={() => setDowloadeOpen(true)}
-                          className="cursor-pointer rounded-lg"
-                        >
-                          <FileText className="mr-2" size={16} />
-                          Download PDF
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          onClick={handlePrint}
-                          className="cursor-pointer rounded-lg"
-                        >
-                          <FileText className="mr-2" size={16} />
-                          Print
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          className="cursor-pointer rounded-lg "
-                          onClick={handleSheare}
-                        >
-                          <Share2 className="mr-2" size={16} />
-                          Share Resume
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+               
                 </div>
                 {/* Download  Feature*/}
-                <Dialog open={dowloadeOpen} onOpenChange={setDowloadeOpen}>
-                  <DialogContent className="text-center">
-                    <div className="flex flex-col items-center gap-3 py-6">
-                      <div className="text-5xl">🚧</div>
-
-                      <DialogTitle className="text-xl font-semibold">
-                        Coming Soon
-                      </DialogTitle>
-
-                      <DialogDescription className="text-gray-500">
-                        PDF Download & Export feature will be available soon.
-                      </DialogDescription>
-
-                      <Button
-                        className="mt-4"
-                        onClick={() => setDowloadeOpen(false)}
-                      >
-                        OK
-                      </Button>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+               
 
                 {/* Preview */}
                 <div
@@ -197,7 +158,6 @@ const ResumeBuilder = ({ title = "Resume Builder" }) => {
                 >
                   <ResumeBuilderPreview
                     data={data}
-                    resumeRef={resumeRef}
                     accentColor={accentColor}
                     templates={templates}
                   />

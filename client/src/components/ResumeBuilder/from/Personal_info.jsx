@@ -9,7 +9,10 @@ import {
 } from "lucide-react";
 import { CiLinkedin } from "react-icons/ci";
 import SaveAndContinue from "../SaveAndContinue";
+import api from "@/api/axios";
+
 const Personal_info = ({ data, setData, nextTab}) => {
+
   const fields = [
     {
       key: "full_name",
@@ -47,6 +50,26 @@ const Personal_info = ({ data, setData, nextTab}) => {
     });
   };
 
+const savePersonalInfo = async () => {
+  console.log(data)
+  try {
+
+    const response = await api.put(
+      `/resume/${data._id}/section`,
+      {
+        personal_info: data.personal_info,
+      }
+    );
+
+    console.log(response.data);
+
+    nextTab();
+
+  } catch (error) {
+    console.log(error);
+  }
+
+};
   
   return (
     <div>
@@ -78,7 +101,7 @@ const Personal_info = ({ data, setData, nextTab}) => {
             </div>
           );
         })}
-        <SaveAndContinue nextTab={nextTab}/>
+        <SaveAndContinue  onSave={savePersonalInfo}/>
       </div>
     </div>
   );
